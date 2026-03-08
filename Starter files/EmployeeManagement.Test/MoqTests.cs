@@ -1,0 +1,32 @@
+﻿using EmployeeManagement.Business;
+using EmployeeManagement.Test.Services;
+using Moq;
+
+namespace EmployeeManagement.Test;
+
+public class MoqTests
+{
+    [Fact]
+    public void FetchInternalEmployee_EmployeeFetched_SuggestedBonusMustBeCalculated()
+    {
+        // Arrange
+
+        var employeeManagementTestDataRepository = new EmployeeManagementTestDataRepository();
+     
+        var employeeFactoryMock = new Mock<EmployeeFactory>();
+
+        // The factory doesn't do anything here. Its just a dummy object.
+
+        var employeeService = new EmployeeService(employeeManagementTestDataRepository,employeeFactoryMock.Object);
+
+        // Act 
+
+        var employee = employeeService.FetchInternalEmployee(Guid.Parse("72f2f5fe-e50c-4966-8420-d50258aefdcb"));
+
+        // Assert
+        
+        Assert.Equal(400, employee!.SuggestedBonus);
+    }
+
+
+}
