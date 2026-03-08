@@ -3,14 +3,22 @@ using EmployeeManagement.DataAccess.Entities;
 
 namespace EmployeeManagement.Test;
 
-public class EmployeeFactoryTests
+public class EmployeeFactoryTests : IDisposable
 {
+    private readonly EmployeeFactory _employeeFactory;
+
+    public EmployeeFactoryTests()
+    {
+        _employeeFactory = new EmployeeFactory();
+    }
+
+    public void Dispose()
+    { }
+
     [Fact]
     public void CreateEmployee_ConstructInternalEmployee_SalaryMustBe2500()
     {
-        var employeeFactory = new EmployeeFactory();
-
-        var employee = (InternalEmployee) employeeFactory.CreateEmployee("Margaret", "Quigley");
+        var employee = (InternalEmployee) _employeeFactory.CreateEmployee("Margaret", "Quigley");
 
         Assert.True(employee.Salary == 2500);
 
@@ -22,9 +30,7 @@ public class EmployeeFactoryTests
     [Fact]
     public void CreateEmployee_ConstructInternalEmployee_PrecisionExample()
     {
-        var employeeFactory = new EmployeeFactory();
-
-        var employee = (InternalEmployee)employeeFactory.CreateEmployee("Margaret", "Quigley");
+        var employee = (InternalEmployee) _employeeFactory.CreateEmployee("Margaret", "Quigley");
 
         employee.Salary = 2500.123M;
 
@@ -36,11 +42,9 @@ public class EmployeeFactoryTests
     {
         // Arrange
 
-        EmployeeFactory employeeFactory = new EmployeeFactory();
-
         // Act
 
-        var employee = employeeFactory.CreateEmployee("Alexandra", "Udinov", "Division", true);
+        var employee = _employeeFactory.CreateEmployee("Alexandra", "Udinov", "Division", true);
 
         // Assert
 
@@ -52,11 +56,9 @@ public class EmployeeFactoryTests
     {
         // Arrange
 
-        EmployeeFactory employeeFactory = new EmployeeFactory();
-
         // Act
 
-        var employee = employeeFactory.CreateEmployee("Alexandra", "Udinov", "Division", true);
+        var employee = _employeeFactory.CreateEmployee("Alexandra", "Udinov", "Division", true);
 
         // Assert
 
