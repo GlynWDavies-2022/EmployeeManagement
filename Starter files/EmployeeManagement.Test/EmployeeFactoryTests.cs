@@ -30,4 +30,36 @@ public class EmployeeFactoryTests
 
         Assert.Equal(2500, employee.Salary, 0);
     }
+
+    [Fact]
+    public void CreateEmployee_ExternalIsTrue_ReturnTypeMustBeExternalEmployee()
+    {
+        // Arrange
+
+        EmployeeFactory employeeFactory = new EmployeeFactory();
+
+        // Act
+
+        var employee = employeeFactory.CreateEmployee("Alexandra", "Udinov", "Division", true);
+
+        // Assert
+
+        Assert.IsType<ExternalEmployee>(employee);
+    }
+
+    [Fact]
+    public void CreateEmployee_ExternalIsTrue_ReturnTypeMustBeObject()
+    {
+        // Arrange
+
+        EmployeeFactory employeeFactory = new EmployeeFactory();
+
+        // Act
+
+        var employee = employeeFactory.CreateEmployee("Alexandra", "Udinov", "Division", true);
+
+        // Assert
+
+        Assert.IsAssignableFrom<Object>(employee);
+    }
 }
