@@ -1,4 +1,5 @@
 ﻿using EmployeeManagement.Business;
+using EmployeeManagement.DataAccess.Entities;
 using EmployeeManagement.Test.Services;
 using Moq;
 
@@ -28,5 +29,52 @@ public class MoqTests
         Assert.Equal(400, employee!.SuggestedBonus);
     }
 
+    [Fact]
+    public void CreateInternalEmployee_InternalEmployeeCreated_SuggestedBonusMustBeCalculated()
+    {
+        // Arrange
+        
+        var employeeManagementTestDataRepository = new EmployeeManagementTestDataRepository();
+
+        var employeeFactoryMock = new Mock<EmployeeFactory>();
+
+        employeeFactoryMock.Setup(m =>
+            m.CreateEmployee(
+                "Kevin",
+                It.IsAny<string>(),
+                null,
+                false))
+            .Returns(new InternalEmployee("Kevin", "Dockx", 5, 2500, false, 1));
+
+        employeeFactoryMock.Setup(m =>
+         m.CreateEmployee(
+             "Sandy",
+             It.IsAny<string>(),
+             null,
+             false))
+         .Returns(new InternalEmployee("Sandy", "Dockx", 0, 3000, false, 1));
+
+        employeeFactoryMock.Setup(m =>
+         m.CreateEmployee(
+             It.Is<string>(value => value.Contains("a")),
+             It.IsAny<string>(),
+             null,
+             false))
+         .Returns(new InternalEmployee("SomeoneWithAna", "Dockx", 0, 3000, false, 1));
+
+        var employeeService = new EmployeeService(
+            employeeManagementTestDataRepository,
+            employeeFactoryMock.Object);
+
+        // suggested bonus for new employees =
+        // (years in service if > 0) * attended courses * 100  
+        decimal suggestedBonus = 200;
+
+        // Act 
+        var employee = employeeService.CreateInternalEmployee("Sandy", "Dockx");
+
+        // Assert  
+        Assert.Equal(suggestedBonus, employee.SuggestedBonus);
+    }
 
 }
